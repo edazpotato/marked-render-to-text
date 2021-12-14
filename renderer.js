@@ -1,20 +1,20 @@
 module.exports = {
   renderToText: function() {
     return {
-        code(code, infostring, escaped) {
-          const lang = (infostring || '').match(/\S*/)[0];
-          const codeLines = code.split("\n");
+      code(code, infostring, escaped) {
+        const lang = (infostring || '').match(/\S*/)[0];
+        const codeLines = code.split("\n");
 
-          let output = "";
-          if (lang) {
-            output = lang + ":\n"
-          }
+        let output = "";
+        if (lang) {
+          output = lang + ":\n"
+        }
           
-          codeLines.map(function(line) {
-            output = output + "\t" + line + "\n";
-          });
-
-          return output
+        codeLines.map(function(line) {
+          output = output + "\t" + line + "\n";
+        });
+        
+        return output
       }
 
       blockquote(quote) {
