@@ -1,7 +1,14 @@
 module.exports = {
-  renderToText: function() {
+  renderToText: function(stripEverything) {
+    if (typeof stripEverything != "boolean") {
+      stripEverything = true;
+    }
     return {
       code(code, infostring, escaped) {
+        if (stripEverything) {
+          return code;
+        }
+        
         const lang = (infostring || '').match(/\S*/)[0];
         const codeLines = code.split("\n");
 
@@ -18,6 +25,10 @@ module.exports = {
       }
 
       blockquote(quote) {
+        if (stripEverything) {
+          return '“' + quote + '”\n';
+        }
+        
         let output = '\n“' + quote.split("\n").map(function(line) {
           return "\t" + line;
         }).join("\n");
@@ -32,49 +43,43 @@ module.exports = {
       }
 
       heading(text, level, raw, slugger) {
-        if (this.options.headerIds) {
-          return '<h'
-            + level
-            + ' id="'
-            + this.options.headerPrefix
-            + slugger.slug(raw)
-            + '">'
-            + text
-            + '</h'
-            + level
-            + '>\n';
+        if (!stripEverything) {
+          if (level == 1) {
+            return "\n" + text + "\n\n"
+          } else if (level == 2) {
+            return "\n" + text + "\n"
+          }
         }
-        // ignore IDs
-        return '<h' + level + '>' + text + '</h' + level + '>\n';
+        return text + "\n";
       }
 
       hr() {
-        return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
+        return stripEverything ? "" : "-------------------------"; // 25 hyphens
       }
 
       list(body, ordered, start) {
-        const type = ordered ? 'ol' : 'ul',
-          startatt = (ordered && start !== 1) ? (' start="' + start + '"') : '';
-        return '<' + type + startatt + '>\n' + body + '</' + type + '>\n';
+        return body + "\n";
       }
 
       listitem(text) {
-        return '<li>' + text + '</li>\n';
+        return stripEverything ? text + ", " : "- " + text + "\n";
       }
 
       checkbox(checked) {
-        return '<input '
-          + (checked ? 'checked="" ' : '')
-          + 'disabled="" type="checkbox"'
-          + (this.options.xhtml ? ' /' : '')
-          + '> ';
+        if (stripEverything) return "";
+        
+        if (checked) {
+          return "[x]\n";
+        }
+        return "[ ]\n";
       }
 
       paragraph(text) {
-        return '<p>' + text + '</p>\n';
+        return text + "\n";
       }
 
       table(header, body) {
+        // TODO
         if (body) body = '<tbody>' + body + '</tbody>';
 
         return '<table>\n'
@@ -99,50 +104,48 @@ module.exports = {
 
       // span level renderer
       strong(text) {
-        return '<strong>' + text + '</strong>';
+        return stripEverything ? text : text.toUpperCase();
       }
 
       em(text) {
-        return '<em>' + text + '</em>';
+        return stripEverything ? text : '*' + text + '*';
       }
 
       codespan(text) {
-        return '<code>' + text + '</code>';
+        return stripEverything ? text : '`' + text + '`';
       }
 
       br() {
-        return this.options.xhtml ? '<br/>' : '<br>';
+        return "\n";
       }
 
       del(text) {
-        return '<del>' + text + '</del>';
+        return text;
       }
 
       link(href, title, text) {
-        href = cleanUrl(this.options.sanitize, this.options.baseUrl, href);
-        if (href === null) {
+        if (stripEverything) {
           return text;
         }
-        let out = '<a href="' + escape(href) + '"';
-        if (title) {
-          out += ' title="' + title + '"';
+        
+        const clearHhref = href; //cleanUrl(this.options.sanitize, this.options.baseUrl, href);
+        if (cleanHref === null) {
+          return text;
         }
-        out += '>' + text + '</a>';
+
+        let output = text + "(";
+        if (title) {
+          output = output + title + " ";
+        }
+        output = output + cleanHref + ")";
         return out;
       }
 
-      image(href, title, text) {
-        href = cleanUrl(this.options.sanitize, this.options.baseUrl, href);
-        if (href === null) {
-          return text;
+      image(href, title, altText) {
+        if (stripEverything) {
+          return altText;
         }
-
-        let out = '<img src="' + href + '" alt="' + text + '"';
-        if (title) {
-          out += ' title="' + title + '"';
-        }
-        out += this.options.xhtml ? '/>' : '>';
-        return out;
+        return altText + "(" + (title ? title + " " : "") + href + ")";
       }
 
       text(text) {
