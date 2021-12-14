@@ -1,4 +1,4 @@
-module.exports = {
+/*module.exports*/const test = {
   renderToText: function(stripEverything) {
     if (typeof stripEverything != "boolean") {
       stripEverything = true;
