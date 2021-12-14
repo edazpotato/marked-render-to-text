@@ -79,27 +79,21 @@ module.exports = {
       }
 
       table(header, body) {
-        // TODO
-        if (body) body = '<tbody>' + body + '</tbody>';
-
-        return '<table>\n'
-          + '<thead>\n'
-          + header
-          + '</thead>\n'
-          + body
-          + '</table>\n';
+        return header + "\n" + (body ? body + "\n" : "");
       }
 
       tablerow(content) {
-        return '<tr>\n' + content + '</tr>\n';
+        if (stripEverything) {
+          return "\n" + content + "\n";
+        }
+        return content.slice(1) + " |\n";
       }
 
       tablecell(content, flags) {
-        const type = flags.header ? 'th' : 'td';
-        const tag = flags.align
-          ? '<' + type + ' align="' + flags.align + '">'
-          : '<' + type + '>';
-        return tag + content + '</' + type + '>\n';
+        if (stripEverything) {
+          return content;
+        }
+        return " | " + content;
       }
 
       // span level renderer
