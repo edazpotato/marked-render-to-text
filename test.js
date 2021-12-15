@@ -10,10 +10,10 @@ marked.use({
 	renderer: renderToText(false),
 });
 
-fs.writeFileSync(path.join(__dirname, "fancy.output.txt"), marked(testFile));
+fs.writeFileSync(path.join(__dirname, "boring.output.txt"), marked(testFile));
 
 marked.use({
 	renderer: renderToText(true),
 });
 
-fs.writeFileSync(path.join(__dirname, "boring.output.txt"), marked(testFile));
+fs.writeFileSync(path.join(__dirname, "fancy.output.txt"), marked(testFile));

@@ -1,11 +1,11 @@
 module.exports = {
-	renderToText: function renderToText(stripEverything) {
-		if (typeof stripEverything != "boolean") {
-			stripEverything = true;
+	renderToText: function renderToText(fancyMode) {
+		if (typeof fancyMode != "boolean") {
+			fancyMode = false;
 		}
 		return {
 			code(code, infostring, escaped) {
-				if (stripEverything) {
+				if (!fancyMode) {
 					return code;
 				}
 
@@ -29,7 +29,7 @@ module.exports = {
 				if (parsedQuote.endsWith("\n")) {
 					parsedQuote = parsedQuote.slice(0, -1);
 				}
-				if (stripEverything) {
+				if (!fancyMode) {
 					return "“" + parsedQuote + "”\n";
 				}
 
@@ -59,7 +59,7 @@ module.exports = {
 			},
 
 			heading(text, level, raw, slugger) {
-				if (!stripEverything) {
+				if (fancyMode) {
 					if (level == 1) {
 						return "\n" + text + "\n\n";
 					} else if (level == 2) {
@@ -70,20 +70,20 @@ module.exports = {
 			},
 
 			hr() {
-				return stripEverything ? "" : "-------------------------"; // 25 hyphens
+				return !fancyMode ? "\n" : "-------------------------\n"; // 25 hyphens
 			},
 
 			list(body, ordered, start) {
 				return body;
 			},
 			listitem(text) {
-				if (stripEverything) {
+				if (!fancyMode) {
 					return text + "\n";
 				}
 				return "- " + text + "\n";
 			},
 			checkbox(checked) {
-				if (stripEverything) {
+				if (!fancyMode) {
 					return "";
 				}
 
@@ -102,38 +102,38 @@ module.exports = {
 			},
 
 			tablerow(content) {
-				if (stripEverything) {
+				if (!fancyMode) {
 					return "\n" + content + "\n";
 				}
 				return content.slice(1) + " |\n";
 			},
 			tablecell(content, flags) {
-				if (stripEverything) {
+				if (!fancyMode) {
 					return content;
 				}
 				return " | " + content;
 			},
 			// span level renderer
 			strong(text) {
-				return stripEverything ? text : text.toUpperCase();
+				return !fancyMode ? text : text.toUpperCase();
 			},
 			em(text) {
-				return stripEverything ? text : "*" + text + "*";
+				return !fancyMode ? text : "*" + text + "*";
 			},
 			codespan(text) {
-				return stripEverything ? text : "`" + text + "`";
+				return !fancyMode ? text : "`" + text + "`";
 			},
 			br() {
 				return "\n";
 			},
 			del(text) {
-				if (stripEverything) {
+				if (!fancyMode) {
 					return text;
 				}
 				return "~" + text + "~";
 			},
 			link(href, title, text) {
-				if (stripEverything) {
+				if (!fancyMode) {
 					return text;
 				}
 
@@ -150,7 +150,7 @@ module.exports = {
 				return output;
 			},
 			image(href, title, altText) {
-				if (stripEverything) {
+				if (!fancyMode) {
 					return altText;
 				}
 				return altText + "(" + (title ? title + " " : "") + href + ")";
