@@ -2,9 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const { marked } = require("marked");
-const {
-	renderToText,
-} = require("./packages/marked-renderer-text/index" /*"marked-renderer-text"*/);
+const { renderToText } = require("marked-renderer-text");
 
 const testFile = fs.readFileSync(path.join(__dirname, "testText.md"), "utf-8");
 
