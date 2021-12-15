@@ -31,6 +31,17 @@ things
 */
 ```
 
+### Typescript
+
+In my testing this works fine with typescript out of the box - you can import it like this
+```ts
+import { renderToText } from "marked-renderer-text";
+```
+and use it like normal.
+Because it's a really simple package, Typescript seems to magicaly infer all of the types.
+
+If you run into any problems using this with typescript, open an issue and I'll add proper type definitions.
+
 ## Options
 
 You can enable fancy mode by passing `true` to the `renderToText()` function.
