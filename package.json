@@ -1,6 +1,13 @@
 {
-  "name": "marked-renderer-text",
-  "version": "0.1.0",
-  "author": "Edazpotato <edazpotato@gmail.com> (https://edaz.codes/)",
-  "main": "renderer.js"
+	"private": true,
+	"workspaces": [
+		"./packages/*"
+	],
+	"scripts": {
+		"test": "node test.js"
+	},
+	"name": "marked-renderer-text-workspace",
+	"dependencies": {
+		"marked": "^4.0.7"
+	}
 }

@@ -1,3 +1,5 @@
+*.output.txt
+
 # Logs
 logs
 *.log
