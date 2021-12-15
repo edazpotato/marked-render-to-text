@@ -8,5 +8,6 @@
 	"peerDependencies": {
 		"marked": "^4.0.7"
 	},
-	"keywords": ["marked", "markdown", "text", "plain-text", "renderer"]
+	"keywords": ["marked", "markdown", "text", "plain-text", "renderer"],
+	"license": "MIT"
 }
