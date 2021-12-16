@@ -1,163 +1,165 @@
-module.exports = {
-	renderToText: function renderToText(fancyMode) {
+const { Renderer } = require("marked");
+
+module.exports = class RenderToText extends Renderer {
+	constructor(fancyMode, options) {
 		if (typeof fancyMode != "boolean") {
 			fancyMode = false;
 		}
-		return {
-			code(code, infostring, escaped) {
-				if (!fancyMode) {
-					return code;
-				}
+		super(options);
+	}
 
-				const lang = (infostring || "").match(/\S*/)[0];
-				const codeLines = code.split("\n");
+	code(code, infostring, escaped) {
+		if (!fancyMode) {
+			return code;
+		}
 
-				let output = "";
-				if (lang) {
-					output = lang + ":\n";
-				}
+		const lang = (infostring || "").match(/\S*/)[0];
+		const codeLines = code.split("\n");
 
-				codeLines.map(function (line) {
-					output = output + "\t" + line + "\n";
-				});
+		let output = "";
+		if (lang) {
+			output = lang + ":\n";
+		}
 
-				return output;
-			},
+		codeLines.map(function (line) {
+			output = output + "\t" + line + "\n";
+		});
 
-			blockquote(quote) {
-				let parsedQuote = quote;
-				if (parsedQuote.endsWith("\n")) {
-					parsedQuote = parsedQuote.slice(0, -1);
-				}
-				if (!fancyMode) {
-					return "“" + parsedQuote + "”\n";
-				}
+		return output;
+	}
 
-				let output =
-					"\n\t“ " +
-					quote
-						.split("\n")
-						.map(function (line, i, list) {
-							if (i == 0) {
-								return line;
-							}
-							if (line == "\t") {
-								return "";
-							}
-							return "\t" + line;
-						})
-						.join("\n")
-						.slice(1);
+	blockquote(quote) {
+		let parsedQuote = quote;
+		if (parsedQuote.endsWith("\n")) {
+			parsedQuote = parsedQuote.slice(0, -1);
+		}
+		if (!fancyMode) {
+			return "“" + parsedQuote + "”\n";
+		}
 
-				output = output + "”\n";
-
-				return output;
-			},
-
-			html(html) {
-				return "";
-			},
-
-			heading(text, level, raw, slugger) {
-				if (fancyMode) {
-					if (level == 1) {
-						return "\n" + text + "\n\n";
-					} else if (level == 2) {
-						return "\n" + text + "\n";
+		let output =
+			"\n\t“ " +
+			quote
+				.split("\n")
+				.map(function (line, i, list) {
+					if (i == 0) {
+						return line;
 					}
-				}
-				return text + "\n";
-			},
+					if (line == "\t") {
+						return "";
+					}
+					return "\t" + line;
+				})
+				.join("\n")
+				.slice(1);
 
-			hr() {
-				return !fancyMode ? "\n" : "-------------------------\n"; // 25 hyphens
-			},
+		output = output + "”\n";
 
-			list(body, ordered, start) {
-				return body;
-			},
-			listitem(text) {
-				if (!fancyMode) {
-					return text + "\n";
-				}
-				return "- " + text + "\n";
-			},
-			checkbox(checked) {
-				if (!fancyMode) {
-					return "";
-				}
+		return output;
+	}
 
-				if (checked) {
-					return "[x]\n";
-				}
-				return "[ ]\n";
-			},
+	html(html) {
+		return "";
+	}
 
-			paragraph(text) {
-				return text + "\n";
-			},
+	heading(text, level, raw, slugger) {
+		if (fancyMode) {
+			if (level == 1) {
+				return "\n" + text + "\n\n";
+			} else if (level == 2) {
+				return "\n" + text + "\n";
+			}
+		}
+		return text + "\n";
+	}
 
-			table(header, body) {
-				return header + "\n" + (body ? body + "\n" : "");
-			},
+	hr() {
+		return !fancyMode ? "\n" : "-------------------------\n"; // 25 hyphens
+	}
 
-			tablerow(content) {
-				if (!fancyMode) {
-					return "\n" + content + "\n";
-				}
-				return content.slice(1) + " |\n";
-			},
-			tablecell(content, flags) {
-				if (!fancyMode) {
-					return content;
-				}
-				return " | " + content;
-			},
-			// span level renderer
-			strong(text) {
-				return !fancyMode ? text : text.toUpperCase();
-			},
-			em(text) {
-				return !fancyMode ? text : "*" + text + "*";
-			},
-			codespan(text) {
-				return !fancyMode ? text : "`" + text + "`";
-			},
-			br() {
-				return "\n";
-			},
-			del(text) {
-				if (!fancyMode) {
-					return text;
-				}
-				return "~" + text + "~";
-			},
-			link(href, title, text) {
-				if (!fancyMode) {
-					return text;
-				}
+	list(body, ordered, start) {
+		return body;
+	}
+	listitem(text) {
+		if (!fancyMode) {
+			return text + "\n";
+		}
+		return "- " + text + "\n";
+	}
+	checkbox(checked) {
+		if (!fancyMode) {
+			return "";
+		}
 
-				const cleanHref = href; //cleanUrl(this.options.sanitize, this.options.baseUrl, href);
-				if (!cleanHref) {
-					return text;
-				}
+		if (checked) {
+			return "[x]\n";
+		}
+		return "[ ]\n";
+	}
 
-				let output = text + "(";
-				if (title) {
-					output = output + title + " ";
-				}
-				output = output + cleanHref + ")";
-				return output;
-			},
-			image(href, title, altText) {
-				if (!fancyMode) {
-					return altText;
-				}
-				return altText + "(" + (title ? title + " " : "") + href + ")";
-			},
-			text(text) {
-				return text;
-			},
-		};
-	},
+	paragraph(text) {
+		return text + "\n";
+	}
+
+	table(header, body) {
+		return header + "\n" + (body ? body + "\n" : "");
+	}
+
+	tablerow(content) {
+		if (!fancyMode) {
+			return "\n" + content + "\n";
+		}
+		return content.slice(1) + " |\n";
+	}
+	tablecell(content, flags) {
+		if (!fancyMode) {
+			return content;
+		}
+		return " | " + content;
+	}
+	// span level renderer
+	strong(text) {
+		return !fancyMode ? text : text.toUpperCase();
+	}
+	em(text) {
+		return !fancyMode ? text : "*" + text + "*";
+	}
+	codespan(text) {
+		return !fancyMode ? text : "`" + text + "`";
+	}
+	br() {
+		return "\n";
+	}
+	del(text) {
+		if (!fancyMode) {
+			return text;
+		}
+		return "~" + text + "~";
+	}
+	link(href, title, text) {
+		if (!fancyMode) {
+			return text;
+		}
+
+		const cleanHref = href; //cleanUrl(this.options.sanitize, this.options.baseUrl, href);
+		if (!cleanHref) {
+			return text;
+		}
+
+		let output = text + "(";
+		if (title) {
+			output = output + title + " ";
+		}
+		output = output + cleanHref + ")";
+		return output;
+	}
+	image(href, title, altText) {
+		if (!fancyMode) {
+			return altText;
+		}
+		return altText + "(" + (title ? title + " " : "") + href + ")";
+	}
+	text(text) {
+		return text;
+	}
 };
