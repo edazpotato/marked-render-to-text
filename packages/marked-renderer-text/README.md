@@ -41,7 +41,7 @@ import { renderToText } from "marked-renderer-text";
 ```
 
 and use it like normal. Because it's a really simple package, Typescript seems
-to magicaly infer all of the types.
+to magically infer all of the types.
 
 If you run into any problems using this with typescript, open an issue and I'll
 add proper type definitions.
