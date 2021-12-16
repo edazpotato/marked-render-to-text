@@ -16,9 +16,9 @@ npm i marked-renderer-text
 
 ```js
 const { marked } = require("marked");
-const { renderToText } = require("marked-renderer-text");
+const RenderToText = require("marked-renderer-text");
 const testText = `# Title\n**bold text**\n- A\n- List\n- *of*\n- ~~things~~`;
-marked.use({ renderer: renderToText() });
+marked.use({ renderer: new RenderToText() });
 console.log(marked(testText)); // Note that it preseves newlines - you need to remove those yourself
 /*
 Title
@@ -33,14 +33,18 @@ things
 
 ### Typescript
 
-In my testing this works fine with typescript out of the box - you can import it like this
+In my testing this works fine with typescript out of the box - you can import it
+like this
+
 ```ts
 import { renderToText } from "marked-renderer-text";
 ```
-and use it like normal.
-Because it's a really simple package, Typescript seems to magicaly infer all of the types.
 
-If you run into any problems using this with typescript, open an issue and I'll add proper type definitions.
+and use it like normal. Because it's a really simple package, Typescript seems
+to magicaly infer all of the types.
+
+If you run into any problems using this with typescript, open an issue and I'll
+add proper type definitions.
 
 ## Options
 
@@ -48,9 +52,9 @@ You can enable fancy mode by passing `true` to the `renderToText()` function.
 
 ```js
 const { marked } = require("marked");
-const { renderToText } = require("marked-renderer-text");
+const RenderToText = require("marked-renderer-text");
 const testText = `# Title\n**bold text**\n- A\n- List\n- *of*\n- ~~things~~`;
-marked.use({ renderer: renderToText(true) });
+marked.use({ renderer: new RenderToText() });
 /*
 
 Title
