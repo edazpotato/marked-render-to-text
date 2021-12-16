@@ -2,16 +2,18 @@ const { Renderer } = require("marked");
 
 module.exports = class RenderToText extends Renderer {
 	constructor(fancyMode, options) {
-		if (typeof fancyMode != "boolean") {
-			this.fancyMode = false;
-		} else {
-			this.fancyMode = fancyMode;
-		}
 		super(options);
+		if (fancyMode) {
+			if (typeof this.fancyMode != "boolean") {
+				this.fancyMode = false;
+			} else {
+				this.fancyMode = fancyMode;
+			}
+		}
 	}
 
 	code(code, infostring, escaped) {
-		if (!fancyMode) {
+		if (!this.fancyMode) {
 			return code;
 		}
 
@@ -35,7 +37,7 @@ module.exports = class RenderToText extends Renderer {
 		if (parsedQuote.endsWith("\n")) {
 			parsedQuote = parsedQuote.slice(0, -1);
 		}
-		if (!fancyMode) {
+		if (!this.fancyMode) {
 			return "“" + parsedQuote + "”\n";
 		}
 
@@ -65,7 +67,7 @@ module.exports = class RenderToText extends Renderer {
 	}
 
 	heading(text, level, raw, slugger) {
-		if (fancyMode) {
+		if (this.fancyMode) {
 			if (level == 1) {
 				return "\n" + text + "\n\n";
 			} else if (level == 2) {
@@ -76,20 +78,20 @@ module.exports = class RenderToText extends Renderer {
 	}
 
 	hr() {
-		return !fancyMode ? "\n" : "-------------------------\n"; // 25 hyphens
+		return !this.fancyMode ? "\n" : "-------------------------\n"; // 25 hyphens
 	}
 
 	list(body, ordered, start) {
 		return body;
 	}
 	listitem(text) {
-		if (!fancyMode) {
+		if (!this.fancyMode) {
 			return text + "\n";
 		}
 		return "- " + text + "\n";
 	}
 	checkbox(checked) {
-		if (!fancyMode) {
+		if (!this.fancyMode) {
 			return "";
 		}
 
@@ -108,38 +110,38 @@ module.exports = class RenderToText extends Renderer {
 	}
 
 	tablerow(content) {
-		if (!fancyMode) {
+		if (!this.fancyMode) {
 			return "\n" + content + "\n";
 		}
 		return content.slice(1) + " |\n";
 	}
 	tablecell(content, flags) {
-		if (!fancyMode) {
+		if (!this.fancyMode) {
 			return content;
 		}
 		return " | " + content;
 	}
 	// span level renderer
 	strong(text) {
-		return !fancyMode ? text : text.toUpperCase();
+		return !this.fancyMode ? text : text.toUpperCase();
 	}
 	em(text) {
-		return !fancyMode ? text : "*" + text + "*";
+		return !this.fancyMode ? text : "*" + text + "*";
 	}
 	codespan(text) {
-		return !fancyMode ? text : "`" + text + "`";
+		return !this.fancyMode ? text : "`" + text + "`";
 	}
 	br() {
 		return "\n";
 	}
 	del(text) {
-		if (!fancyMode) {
+		if (!this.fancyMode) {
 			return text;
 		}
 		return "~" + text + "~";
 	}
 	link(href, title, text) {
-		if (!fancyMode) {
+		if (!this.fancyMode) {
 			return text;
 		}
 
@@ -156,7 +158,7 @@ module.exports = class RenderToText extends Renderer {
 		return output;
 	}
 	image(href, title, altText) {
-		if (!fancyMode) {
+		if (!this.fancyMode) {
 			return altText;
 		}
 		return altText + "(" + (title ? title + " " : "") + href + ")";
