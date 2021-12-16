@@ -3,7 +3,9 @@ const { Renderer } = require("marked");
 module.exports = class RenderToText extends Renderer {
 	constructor(fancyMode, options) {
 		if (typeof fancyMode != "boolean") {
-			fancyMode = false;
+			this.fancyMode = false;
+		} else {
+			this.fancyMode = fancyMode;
 		}
 		super(options);
 	}
