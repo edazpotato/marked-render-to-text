@@ -1,7 +1,7 @@
 {
 	"name": "marked-renderer-text",
 	"description": "A custom renderer for Marked to render markdown to plain text",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"author": "Edazpotato <edazpotato@gmail.com> (https://edaz.codes/)",
 	"main": "index.js",
 	"types": "index.d.ts",
