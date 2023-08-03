@@ -8,6 +8,6 @@
 	},
 	"name": "marked-renderer-text-workspace",
 	"dependencies": {
-		"marked": "^4.0.7"
+		"marked": "^4.0.10"
 	}
 }
